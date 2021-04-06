@@ -40,15 +40,15 @@ generate_simulation_splatter <- function(dropout_index, seed_value, nGenes = 800
                             seed = seed_value)
   
   # genereate the cpm levels of the true simulation data
-  data_true = cpm(sim@assays$data$TrueCounts)
+  data_true = cpm(sim@assays@data$TrueCounts)
   
-  data_dropout = data_true
+  data_dropout = Matrix::Matrix(data_true)
   
   # generate the dropout data based on the counts in sim
   data_dropout[counts(sim) == 0] = 0
   
   # calculate the dropout rate
-  percentage_zeros = round(nnzero(data_dropout == 0, na.counted = NA)/
+  percentage_zeros = round(Matrix::nnzero(data_dropout == 0, na.counted = NA)/
                              (dim(data_dropout)[1]*dim(data_dropout)[2])*100)
   
   
@@ -654,7 +654,7 @@ plot_meansd <- function(dropout_index, seed_value){
   
   data_scrabble = as.matrix(data_scrabble)
   
-  ratio_zeros_raw <- 1 - nnzero(data_dropout)/length(data_dropout)
+  ratio_zeros_raw <- 1 - Matrix::nnzero(data_dropout)/length(data_dropout)
   
   pl = list()
   
